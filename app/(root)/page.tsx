@@ -1,6 +1,6 @@
-import { NewProductDialog } from "./_components/NewProductDialog";
-import { productColumns } from "./_components/ProductColumn";
-import { ProductDataTable } from "./_components/ProductDataTable";
+import { NewProductDialog } from "../_components/NewProductDialog";
+import { productColumns } from "../_components/ProductColumn";
+import { ProductDataTable } from "../_components/ProductDataTable";
 
 export default function Home() {
   return (
