@@ -26,6 +26,16 @@ export const roleApi = apiSlice.injectEndpoints({
       },
       invalidatesTags: ["Role"],
     }),
+    updateRole: builder.mutation({
+      query: (payload) => {
+        return {
+          url: `/roles/${payload.id}`,
+          method: "PATCH",
+          body: payload,
+        };
+      },
+      invalidatesTags: ["Role"],
+    }),
     deleteRole: builder.mutation<any, string>({
       query: (id) => {
         return {
@@ -42,5 +52,6 @@ export const {
   useGetRolesQuery,
   useCreateRoleMutation,
   useDeleteRoleMutation,
+  useUpdateRoleMutation,
   useGetRoleQuery,
 } = roleApi;

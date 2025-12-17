@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { usePermission } from "@/hooks/usePermission";
 import { projectSchema, ProjectSchema } from "@/schema/projectSchema";
 import { useCreateProjectMutation } from "@/store/Api/projectApi";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +20,7 @@ import { ProjectForm } from "./project-form";
 
 export const NewProjectDialog = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const canCreate = usePermission("project:create");
 
   const projectForm = useForm<ProjectSchema>({
     resolver: zodResolver(projectSchema),
@@ -59,7 +61,7 @@ export const NewProjectDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild disabled={!canCreate}>
         <Button>
           <IconPlus /> New Project
         </Button>

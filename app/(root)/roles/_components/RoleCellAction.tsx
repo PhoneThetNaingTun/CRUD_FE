@@ -8,10 +8,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { usePermission } from "@/hooks/usePermission";
 import { useDeleteRoleMutation } from "@/store/Api/roleSlice";
 import { Role } from "@/types/auth";
 import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
+import { UpdateRoleDialog } from "./UpdateRoleDialog";
 
 interface Props {
   data: Role;
@@ -21,6 +23,10 @@ export const RoleCellAction = ({ data }: Props) => {
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [Delete, { isLoading }] = useDeleteRoleMutation();
+
+  const canEdit = usePermission("role:update");
+  const canDelete = usePermission("role:delete");
+
   const handleDelete = async () => {
     try {
       const responseData = await Delete(data.id).unwrap();
@@ -56,15 +62,18 @@ export const RoleCellAction = ({ data }: Props) => {
         <DropdownMenuContent>
           <DropdownMenuItem>Actions</DropdownMenuItem>
           <Separator />
-          <DropdownMenuItem onClick={() => setOpen(true)}>
+          <DropdownMenuItem disabled={!canEdit} onClick={() => setOpen(true)}>
             <IconEdit className="w-4 h-4" /> Edit
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setDeleteOpen(true)}>
+          <DropdownMenuItem
+            disabled={!canDelete}
+            onClick={() => setDeleteOpen(true)}
+          >
             <IconTrash className="w-4 h-4" /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-
+      <UpdateRoleDialog initialValue={data} open={open} setOpen={setOpen} />
       <DeleteDialog
         open={deleteOpen}
         setOpen={setDeleteOpen}

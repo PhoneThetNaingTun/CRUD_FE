@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { usePermission } from "@/hooks/usePermission";
 import { getUserSchema, UserSchema } from "@/schema/userSchema";
 import { useCreateUserMutation } from "@/store/Api/userApi";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +20,7 @@ import { UserForm } from "./user-form";
 
 export const NewUserDialog = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const canCreate = usePermission("user:create");
 
   const userForm = useForm<UserSchema>({
     resolver: zodResolver(getUserSchema(false)),
@@ -60,7 +62,7 @@ export const NewUserDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild disabled={!canCreate}>
         <Button>
           <IconPlus /> New User
         </Button>

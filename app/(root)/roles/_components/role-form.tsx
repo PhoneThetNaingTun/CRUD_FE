@@ -54,40 +54,51 @@ export function RoleForm({ form, isLoading, handleSubmit, submitLabel }: Prop) {
               <Field className="max-h-[50vh] overflow-y-scroll bg-muted p-5 rounded-md">
                 <FormField
                   control={form.control}
-                  name="permissionIds"
+                  name="rolePermissions"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Permissions </FormLabel>
+                      <FormLabel>Permissions</FormLabel>
                       <FormControl>
                         <div className="flex flex-col gap-2">
                           {isPermissionLoading ? (
                             <Spinner />
                           ) : (
-                            Permissions?.data.map((permission: Permission) => (
-                              <div
-                                className="flex items-center gap-3"
-                                key={permission.id}
-                              >
-                                <Checkbox
-                                  checked={field.value?.includes(permission.id)}
-                                  onCheckedChange={(checked) => {
-                                    if (checked) {
-                                      field.onChange([
-                                        ...(field.value || []),
-                                        permission.id,
-                                      ]);
-                                    } else {
-                                      field.onChange(
-                                        (field.value || []).filter(
-                                          (id) => id !== permission.id
-                                        )
-                                      );
-                                    }
-                                  }}
-                                />
-                                {permission.permission}
-                              </div>
-                            ))
+                            Permissions?.data.map((permission: Permission) => {
+                              const isChecked = field.value?.some(
+                                (rp) => rp.permission.id === permission.id
+                              );
+
+                              return (
+                                <div
+                                  className="flex items-center gap-3"
+                                  key={permission.id}
+                                >
+                                  <Checkbox
+                                    checked={isChecked}
+                                    onCheckedChange={(checked) => {
+                                      if (checked) {
+                                        field.onChange([
+                                          ...(field.value || []),
+                                          {
+                                            permission: {
+                                              id: permission.id,
+                                            },
+                                          },
+                                        ]);
+                                      } else {
+                                        field.onChange(
+                                          (field.value || []).filter(
+                                            (rp) =>
+                                              rp.permission.id !== permission.id
+                                          )
+                                        );
+                                      }
+                                    }}
+                                  />
+                                  {permission.permission}
+                                </div>
+                              );
+                            })
                           )}
                         </div>
                       </FormControl>

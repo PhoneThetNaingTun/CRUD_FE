@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { usePermission } from "@/hooks/usePermission";
 import { useDeleteUserMutation } from "@/store/Api/userApi";
 import { User } from "@/types/user";
 import { IconDotsVertical, IconEdit, IconTrash } from "@tabler/icons-react";
@@ -22,6 +23,8 @@ export const UserCellAction = ({ data }: Props) => {
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [Delete, { isLoading }] = useDeleteUserMutation();
+  const canEdit = usePermission("user:update");
+  const canDelete = usePermission("user:delete");
   const handleDelete = async () => {
     try {
       const responseData = await Delete(data.id).unwrap();
@@ -57,10 +60,13 @@ export const UserCellAction = ({ data }: Props) => {
         <DropdownMenuContent>
           <DropdownMenuItem>Actions</DropdownMenuItem>
           <Separator />
-          <DropdownMenuItem onClick={() => setOpen(true)}>
+          <DropdownMenuItem disabled={!canEdit} onClick={() => setOpen(true)}>
             <IconEdit className="w-4 h-4" /> Edit
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setDeleteOpen(true)}>
+          <DropdownMenuItem
+            disabled={!canDelete}
+            onClick={() => setDeleteOpen(true)}
+          >
             <IconTrash className="w-4 h-4" /> Delete
           </DropdownMenuItem>
         </DropdownMenuContent>

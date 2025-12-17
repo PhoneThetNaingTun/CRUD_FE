@@ -1,45 +1,41 @@
 "use client";
 import { showToast } from "@/components/toaster";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { usePermission } from "@/hooks/usePermission";
 import { roleSchema, RoleSchema } from "@/schema/roleSchema";
-import { useCreateRoleMutation } from "@/store/Api/roleSlice";
+import { useUpdateRoleMutation } from "@/store/Api/roleSlice";
+import { Role } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IconPlus } from "@tabler/icons-react";
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { RoleForm } from "./role-form";
 
-export const NewRoleDialog = () => {
-  const [open, setOpen] = useState<boolean>(false);
-  const canCreate = usePermission("role:create");
+interface Prop {
+  initialValue: Role;
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+export const UpdateRoleDialog = ({ initialValue, open, setOpen }: Prop) => {
   const roleForm = useForm<RoleSchema>({
     resolver: zodResolver(roleSchema),
-    defaultValues: {
-      role: "",
-      rolePermissions: [],
-    },
+    defaultValues: initialValue,
   });
 
-  const [Create, { isLoading }] = useCreateRoleMutation();
+  const [Update, { isLoading }] = useUpdateRoleMutation();
   const handleSubmit = async (value: RoleSchema) => {
     try {
-      const data = await Create(value).unwrap();
+      const data = await Update({ id: initialValue.id, ...value }).unwrap();
       showToast({
         title: "Success",
         description: data.message,
         type: "success",
       });
       setOpen(false);
-      roleForm.reset();
     } catch (error: any) {
       if (error?.data?.message) {
         showToast({
@@ -59,21 +55,14 @@ export const NewRoleDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild disabled={!canCreate}>
-        <Button>
-          <IconPlus /> New Role
-        </Button>
-      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Role</DialogTitle>{" "}
-          <DialogDescription>Enter role details</DialogDescription>
+          <DialogTitle>Update Role</DialogTitle>
         </DialogHeader>
-
         <RoleForm
           form={roleForm}
           isLoading={isLoading}
-          submitLabel="Create"
+          submitLabel="Update"
           handleSubmit={handleSubmit}
         />
       </DialogContent>
