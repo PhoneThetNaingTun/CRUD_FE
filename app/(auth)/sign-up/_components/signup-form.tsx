@@ -16,11 +16,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { signUpSchema, SignUpSchema } from "@/schema/signUpSchema";
 import { useRegisterMutation } from "@/store/Api/authApi";
+import { useAppSelector } from "@/store/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export function SignUpForm({
@@ -29,6 +30,7 @@ export function SignUpForm({
 }: React.ComponentProps<"div">) {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const { token } = useAppSelector((state) => state.Auth);
 
   const signUpForm = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
@@ -50,7 +52,7 @@ export function SignUpForm({
         title: data.message,
         type: "success",
       });
-      router.replace("/");
+      router.replace("/login");
     } catch (error: any) {
       if (error?.data?.message) {
         showToast({
@@ -65,6 +67,12 @@ export function SignUpForm({
       }
     }
   };
+
+  useEffect(() => {
+    if (token) {
+      signUpForm.setValue("fcmToken", token);
+    }
+  }, [token]);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>

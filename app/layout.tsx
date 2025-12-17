@@ -1,3 +1,4 @@
+import NotificationPermission from "@/components/Providers/NotificationPermission";
 import { StoreProvider } from "@/components/Providers/StoreProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -29,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <StoreProvider>
-          {" "}
+          <NotificationPermission />
           {children}
           <Toaster richColors />
         </StoreProvider>
