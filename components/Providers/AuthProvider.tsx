@@ -15,9 +15,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        const { data } = await getMe(""); // backend reads cookie
+        const { data } = await getMe("");
         if (!data) throw new Error("Unauthenticated");
-        dispatch(setUser(data));
+        dispatch(setUser(data.data));
       } catch {
         dispatch(removeUser(null));
         router.replace("/login");
