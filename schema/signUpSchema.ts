@@ -6,6 +6,7 @@ export const signUpSchema = z.object({
     .min(8, "Password must be at least 8 characters")
     .max(32, "Password must be at most 32 characters"),
   name: z.string(),
+  fcmToken: z.string().optional(),
 });
 
 export type SignUpSchema = z.infer<typeof signUpSchema>;

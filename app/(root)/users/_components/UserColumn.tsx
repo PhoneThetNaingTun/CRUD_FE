@@ -3,6 +3,7 @@
 import { User } from "@/types/user";
 import { ColumnDef } from "@tanstack/react-table";
 import { UserCellAction } from "./UserCellAction";
+import { UserStatusCellAction } from "./UserStatusCellAction";
 
 export const userColumns: ColumnDef<User>[] = [
   {
@@ -16,7 +17,7 @@ export const userColumns: ColumnDef<User>[] = [
   {
     accessorKey: "role",
     header: "Role",
-    cell: ({ row }) => <p>{row.original.role.role}</p>,
+    cell: ({ row }) => <p>{row.original?.role && row.original.role.role}</p>,
   },
 
   {
@@ -28,6 +29,11 @@ export const userColumns: ColumnDef<User>[] = [
   },
   {
     header: "Action",
-    cell: ({ row }) => <UserCellAction data={row.original} />,
+    cell: ({ row }) =>
+      row.original.status ? (
+        <UserCellAction data={row.original} />
+      ) : (
+        <UserStatusCellAction data={row.original} />
+      ),
   },
 ];

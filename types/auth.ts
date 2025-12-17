@@ -31,6 +31,6 @@ export type User = {
 };
 
 export interface AuthSliceState {
-  token: string | null;
+  token: string | undefined;
   user: User | null;
 }
