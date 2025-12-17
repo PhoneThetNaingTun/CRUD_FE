@@ -10,6 +10,9 @@ export default function Home() {
       <Button>
         <Link href={"/projects"}>Projects</Link>
       </Button>
+      <Button>
+        <Link href={"/roles"}>Roles</Link>
+      </Button>
     </div>
   );
 }
