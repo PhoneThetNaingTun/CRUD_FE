@@ -7,6 +7,9 @@ export default function Home() {
       <Button>
         <Link href={"/users"}>Users</Link>
       </Button>
+      <Button>
+        <Link href={"/projects"}>Projects</Link>
+      </Button>
     </div>
   );
 }
