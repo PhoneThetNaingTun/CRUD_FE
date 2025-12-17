@@ -13,20 +13,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { UserSchema } from "@/schema/userSchema";
-import { Role } from "@/types/auth";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { CircleFadingPlus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { RoleSelect } from "./role-select";
 
 interface Prop {
   form: ReturnType<typeof useForm<UserSchema>>;
@@ -120,28 +113,16 @@ export function UserForm({
               <Field>
                 <FormField
                   control={form.control}
-                  name="role"
+                  name="role_id"
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>Role </FormLabel>
                       <FormControl>
-                        <Select
+                        <RoleSelect
                           value={field.value ?? ""}
-                          onValueChange={(e) => field.onChange(e)}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Role" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value={Role.ADMIN}>Admin</SelectItem>
-                            <SelectItem value={Role.DEVELOPER}>
-                              Developer
-                            </SelectItem>
-                            <SelectItem value={Role.MANAGER}>
-                              Manager
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
+                          onValueChange={field.onChange}
+                          isLoading={isLoading}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

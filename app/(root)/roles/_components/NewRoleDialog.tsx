@@ -9,29 +9,27 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { getUserSchema, UserSchema } from "@/schema/userSchema";
-import { useCreateUserMutation } from "@/store/Api/userApi";
+import { roleSchema, RoleSchema } from "@/schema/roleSchema";
+import { useCreateRoleMutation } from "@/store/Api/roleSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconPlus } from "@tabler/icons-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { UserForm } from "./user-form";
+import { RoleForm } from "./role-form";
 
-export const NewUserDialog = () => {
+export const NewRoleDialog = () => {
   const [open, setOpen] = useState<boolean>(false);
 
-  const userForm = useForm<UserSchema>({
-    resolver: zodResolver(getUserSchema(false)),
+  const roleForm = useForm<RoleSchema>({
+    resolver: zodResolver(roleSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      role_id: "",
+      role: "",
+      permissionIds: [],
     },
   });
 
-  const [Create, { isLoading }] = useCreateUserMutation();
-  const handleSubmit = async (value: any) => {
+  const [Create, { isLoading }] = useCreateRoleMutation();
+  const handleSubmit = async (value: RoleSchema) => {
     try {
       const data = await Create(value).unwrap();
       showToast({
@@ -40,7 +38,7 @@ export const NewUserDialog = () => {
         type: "success",
       });
       setOpen(false);
-      userForm.reset();
+      roleForm.reset();
     } catch (error: any) {
       if (error?.data?.message) {
         showToast({
@@ -62,17 +60,17 @@ export const NewUserDialog = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <IconPlus /> New User
+          <IconPlus /> New Role
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New User</DialogTitle>{" "}
-          <DialogDescription>Enter user details</DialogDescription>
+          <DialogTitle>New Role</DialogTitle>{" "}
+          <DialogDescription>Enter role details</DialogDescription>
         </DialogHeader>
 
-        <UserForm
-          form={userForm}
+        <RoleForm
+          form={roleForm}
           isLoading={isLoading}
           submitLabel="Create"
           handleSubmit={handleSubmit}

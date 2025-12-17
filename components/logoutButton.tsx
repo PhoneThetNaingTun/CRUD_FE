@@ -40,7 +40,7 @@ export const LogoutButton = () => {
       <div className="px-3 py-1 shadow-md rounded-md">
         <p>{user?.name}</p>
         <Badge className="mr-2" variant={"outline"}>
-          {user?.role}
+          {user?.role.role}
         </Badge>
       </div>
       <Button onClick={handleLogout} disabled={isLoading}>

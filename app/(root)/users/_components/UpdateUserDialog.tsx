@@ -27,7 +27,7 @@ export const UpdateUserDialog = ({ initialValue, open, setOpen }: Prop) => {
   });
 
   const [Update, { isLoading }] = useUpdateUserMutation();
-  const handleSubmit = async (value: UserSchema) => {
+  const handleSubmit = async (value: any) => {
     try {
       const data = await Update({ id: initialValue.id, ...value }).unwrap();
       showToast({

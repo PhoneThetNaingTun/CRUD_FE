@@ -18,6 +18,7 @@ export const authApi = apiSlice.injectEndpoints({
     }),
     getMe: builder.query({
       query: () => "/auth/me",
+      keepUnusedDataFor: 0,
     }),
     logout: builder.mutation({
       query: () => ({
